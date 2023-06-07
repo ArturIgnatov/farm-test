@@ -43,16 +43,17 @@ interface IContentJSON {
 
 export const Situation: FC<IProps> = memo(({ id, theme_param, speciality, case_content_json }) => {
   const [allAnswersVisible, setAllAnswersVisible] = useState(false);
-
   const content = useMemo<Array<IContentJSON> | null>(() => case_content_json && JSON.parse(case_content_json), [case_content_json]);
-
-  console.log((content ?? [])[2]);
 
   const toggleAllQuestionsVisible = () => {
     setAllAnswersVisible(prev => !prev)
   }
 
-  const info = (content ?? [])[1];
+  if (!content) {
+    return null
+  }
+
+  const info = content[1];
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -65,9 +66,6 @@ export const Situation: FC<IProps> = memo(({ id, theme_param, speciality, case_c
             {theme_param}
           </Typography>
           <Typography sx={{ mb: 1.5, mt: 1.5 }} color="text.secondary">
-            Level: {info?.level ?? ''}
-          </Typography>
-          <Typography sx={{ mb: 1.5, mt: 1.5 }} color="text.secondary">
             {info?.name ?? ''}:
           </Typography>
           <Typography variant="body2">
@@ -75,7 +73,7 @@ export const Situation: FC<IProps> = memo(({ id, theme_param, speciality, case_c
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small" onClick={toggleAllQuestionsVisible}>Open questions</Button>
+          <Button size="small" onClick={toggleAllQuestionsVisible}>Показать вопросы</Button>
         </CardActions>
       </Card>
       <Dialog
@@ -85,7 +83,7 @@ export const Situation: FC<IProps> = memo(({ id, theme_param, speciality, case_c
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          Questions
+          Вопросы
           <IconButton
             aria-label="close"
             onClick={toggleAllQuestionsVisible}
@@ -101,7 +99,7 @@ export const Situation: FC<IProps> = memo(({ id, theme_param, speciality, case_c
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {content?.map((el, idx) => idx > 1 && (
+            {content.map((el, idx) => idx > 1 && (
               <Card key={el.id} sx={{ width: '100%', marginBlock: '8px' }}>
                 <CardContent>
                   <Typography key={el.id}>
