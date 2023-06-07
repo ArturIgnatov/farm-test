@@ -1,25 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useMemo} from 'react';
+import { ThemeProvider, Box, createTheme, SxProps } from '@mui/material'
 import './App.css';
+import {Main} from "./pages/Main";
+import './main.scss'
+
+const sx: SxProps = {
+  display: 'flex',
+  height: '100vh',
+  width: '100wh',
+  bgcolor: 'background.default',
+  color: 'text.primary',
+};
 
 function App() {
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: 'dark',
+          primary: {
+            main: '#e91e63', //'#f4511e'
+          },
+          secondary: {
+            main: '#e91e63',
+          },
+        },
+        spacing: 4,
+      }),
+    [],
+  );
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider {...{theme }}>
+      <Box {...{ sx }}>
+        <Main />
+      </Box>
+    </ThemeProvider>
   );
 }
 
